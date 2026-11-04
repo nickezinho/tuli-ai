@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/* Cores e fontes dos mockups. Use como classes: bg-tulipa, text-texto, font-pixel... */
+@theme {
+  --color-tulipa: #cf3a46;
+  --color-tulipa-escura: #9c2833;
+  --color-folha: #4caf6a;
+  --color-folha-escura: #2e7d46;
+  --color-streak: #ff9f1c;
+  --color-texto: #1f2430;
+  --color-texto-suave: #5b6170;
+  --color-borda: #e6e7ea;
+  --color-fundo-suave: #f7f7f5;
+
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
+  --font-pixel: var(--font-pixelify), monospace;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-texto);
+}
