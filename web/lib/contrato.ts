@@ -36,7 +36,10 @@ export interface EntradaTapping {
   toques: Ponto[];
 }
 
-/** Guia da espiral: o app desenha exatamente esta curva e a análise a reconstrói. */
+/**
+ * Guia da espiral: o app desenha exatamente esta curva e a análise a reconstrói.
+ * θ de 0 a 2π·voltas, r = raio_final · θ / (2π·voltas), x = centro.x + r·cos θ, y = centro.y + r·sen θ.
+ */
 export const GUIA_ESPIRAL = { centro: { x: 0.5, y: 0.5 }, voltas: 3, raio_final: 0.45 } as const;
 
 // ---------- Respostas ----------

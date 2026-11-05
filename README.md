@@ -28,7 +28,7 @@ api/               FastAPI: análise de voz e toque (parte 2)
 2. **Análise** (`api/`): um endpoint por jogo, a comparação com a linha de base (`/comparar`) e o histórico sintético da demo.
 3. **Backend e integrações** (`web/app/api`, Supabase): login, perfil, salvar sessões, streak, Resend (lembretes e relatório semanal), Firecrawl (busca de neurologistas e serviços do SUS), cron e deploy.
 
-Todas as rotas já respondem com dados falsos no formato do contrato (`web/lib/mocks.ts` e os `TODO` em `api/app/main.py`), então cada parte começa sem esperar as outras.
+O app tem dados falsos no formato do contrato (`web/lib/mocks.ts`), então cada parte começa sem esperar as outras. A análise em `api/` já mede os 4 jogos de verdade.
 
 ## Rodando
 

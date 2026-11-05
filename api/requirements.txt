@@ -4,6 +4,9 @@ python-multipart==0.0.20
 pydantic==2.10.4
 pytest==8.3.4
 httpx==0.28.1
-# Análise de voz (parte 2): descomentar quando for implementar
-# praat-parselmouth==0.4.5
-# librosa==0.10.2.post1
+# Análise (parte 2)
+numpy>=1.26,<3
+scipy>=1.11
+praat-parselmouth==0.4.5
+librosa==0.10.2.post1
+imageio-ffmpeg==0.8.1  # ffmpeg embutido, para abrir webm/mp4 sem instalar nada no servidor

@@ -57,7 +57,13 @@ A métrica principal é a que aparece no gráfico pequeno da aba do Tuli e a que
 }
 ```
 
-O guia é uma espiral de Arquimedes centrada em (0.5, 0.5), com 3 voltas e raio final 0.45. A análise reconstrói o guia com esses mesmos números, então o app desenha exatamente essa curva.
+O guia é uma espiral de Arquimedes centrada em (0.5, 0.5), com 3 voltas e raio final 0.45. A análise reconstrói o guia com esses mesmos números, então o app desenha exatamente essa curva:
+
+```
+θ de 0 a 6π    r = 0.45 · θ / (6π)    x = 0.5 + r·cos θ    y = 0.5 + r·sen θ
+```
+
+`y` cresce para baixo, como na tela. Se o app desenhar a versão espelhada (`y = 0.5 - r·sen θ`), a análise também aceita.
 
 ### `POST /api/jogos/tapping`
 
@@ -163,6 +169,8 @@ O backend recebe o jogo do app, repassa para a análise, salva a resposta no Sup
 
 `multipart/form-data` com `audio` (arquivo). A análise converte para WAV mono 16 kHz internamente.
 
+Se o arquivo não for um áudio que dê para abrir, a resposta é `422` com `{ "erro": "audio_invalido", "mensagem": "..." }`. Arquivo vazio ou só ruído volta `200` com `qualidade.ok = false`.
+
 Resposta de `vogal`:
 
 ```json
@@ -202,6 +210,18 @@ Recebem o mesmo JSON do contrato A, sem mudanças. Respostas:
   "metrica_principal": { "nome": "toques_por_s", "valor": 4.8 }
 }
 ```
+
+Como cada métrica é medida (detalhes nos módulos de `api/app/`):
+
+| Jogo | Métrica | Como |
+|---|---|---|
+| `vogal` | `duracao_s` | Maior trecho contínuo com voz. Menos de 2 s volta `audio_curto`. |
+| `vogal` | `jitter_pct`, `shimmer_pct`, `hnr_db`, `f0_*` | Praat (Parselmouth) no trecho com voz, sem os 0,25 s das pontas. Jitter e shimmer locais, HNR por autocorrelação, F0 de 75 a 500 Hz. |
+| `pataka` | `silabas_por_s` | Picos de energia (librosa RMS) a pelo menos 70 ms e 6 dB de distância. `(n - 1) / (último - primeiro)`, então silêncio nas pontas não conta. |
+| `pataka` | `intervalo_cv` | Desvio / média dos intervalos entre sílabas. |
+| `espiral` | `desvio_medio` | Distância média de cada ponto ao ponto mais próximo do guia. O traço precisa cobrir 60% do guia, senão `traco_incompleto`. |
+| `espiral` | `tremor_hz` | Pico de 3 a 12 Hz no espectro do erro radial. `0` quando não há oscilação clara (menos de ~1 mm ou energia espalhada). |
+| `espiral` | `velocidade_media` | Comprimento do traço / tempo, em unidades normalizadas por segundo. |
 
 `queda_ritmo_pct` compara os toques por segundo dos primeiros 5 s com os últimos 5 s. Um valor positivo quer dizer que a pessoa ficou mais lenta no fim.
 

@@ -34,11 +34,16 @@ def test_tapping_poucos_toques():
     assert r["qualidade"] == {"ok": False, "motivo": "poucos_toques"}
 
 
-def test_vogal_mock_e_audio_vazio():
-    ok = cliente.post("/analisar/vogal", files={"audio": ("a.webm", b"x", "audio/webm")}).json()
-    assert ok["metrica_principal"]["nome"] == "jitter_pct"
-    vazio = cliente.post("/analisar/vogal", files={"audio": ("a.webm", b"", "audio/webm")}).json()
-    assert vazio["qualidade"]["motivo"] == "audio_silencioso"
+def test_audio_vazio():
+    for jogo in ("vogal", "pataka"):
+        r = cliente.post(f"/analisar/{jogo}", files={"audio": ("a.webm", b"", "audio/webm")}).json()
+        assert r["qualidade"] == {"ok": False, "motivo": "audio_silencioso"}
+
+
+def test_audio_invalido_devolve_erro_do_contrato():
+    r = cliente.post("/analisar/vogal", files={"audio": ("a.webm", b"isso nao e audio", "audio/webm")})
+    assert r.status_code == 422
+    assert r.json()["erro"] == "audio_invalido"
 
 
 def test_comparar_detecta_mudanca_na_voz_sintetica():
